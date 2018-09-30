@@ -1,0 +1,46 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+*~
+
+.idea
+cmake-build-*
+*.vim
+.deps
+libs
+obj
+.gradle
+gradle
+local.properties
+build
+gradlew*
+*.iml
+
+# Build files
+build/
+bin/
+.DS_Store
+cmake_install.cmake
+CMakeCache.txt
+/CMakeFiles/*
+CMakeFiles/*
+*.cbp
