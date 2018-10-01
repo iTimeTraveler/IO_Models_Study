@@ -16,9 +16,6 @@
 using namespace std;
 
 extern const int BUF_SIZE;
-extern const char SERVER_IP[];
-extern const int SERVER_PORT;
-extern const int BACKLOG;
 
 int block_serv(int argc, char *argv[]) {
 
@@ -38,7 +35,7 @@ int block_serv(int argc, char *argv[]) {
         //accept connection from an incoming client
         int client_sock = accept_socket(listen_sockfd);
         if (client_sock == -1) {
-            perror("accept failed");
+            perror("ERROR : accept failed");
             continue;
         }
 

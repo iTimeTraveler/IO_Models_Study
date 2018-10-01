@@ -5,6 +5,7 @@
 #ifndef IO_MODELS_STUDY_COMMON_H
 #define IO_MODELS_STUDY_COMMON_H
 
+#include <netinet/in.h>
 
 int create_socket();
 void set_reuse_addr(int sockfd);

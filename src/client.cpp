@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     int sock;
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock == -1) {
-        perror("could not create socket");
+        perror("ERROR : could not create socket");
         exit(1);
     }
 
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
     //Connect to remote server
     if (connect(sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
-        perror("connect failed");
+        perror("ERROR : connect failed");
         exit(1);
     }
 
@@ -47,13 +47,13 @@ int main(int argc, char *argv[]) {
         //Send count
         print("[Send]: %s\n", message);
         if ( send(sock, message, strlen(message)+1, 0) < 0) {
-            perror("send failed");
+            perror("ERROR : send failed");
             exit(1);
         }
 
         //Receive a reply from the server
         if (recv(sock, message, (size_t) BUF_SIZE, 0) < 0) {
-            perror("recv failed");
+            perror("ERROR : recv failed");
             exit(1);
         }
 

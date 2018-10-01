@@ -28,3 +28,23 @@ Networking](https://notes.shichao.io/unp/ch6/)》 Chapter 6.2 "I/O Models"
 基于 TCP 的网络编程开发分为服务器端和客户端两部分，常见的核心步骤和流程如下：
 
 ![](README/linux-TCP-socket.png)
+
+
+## 非阻塞IO
+
+Linux中将 socket 设置为非阻塞模式有三种方法：
+
+（1）创建socket的时候，指定socket是异步的，在type的参数中设置`SOCK_NONBLOCK`标志即可。
+
+```c
+int socket(int domain, int type, int protocol);
+int s = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
+```
+（2）使用`fcntl`函数：
+```c
+fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL, 0) | O_NONBLOCK);
+```
+（3）使用`ioctl`函数：
+```c
+ioctl(sockfd, FIONBIO, 1);  //1:非阻塞 0:阻塞
+```

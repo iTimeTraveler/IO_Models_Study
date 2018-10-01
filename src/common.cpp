@@ -23,7 +23,7 @@ extern const int CLIENT_INTERVAL = 1;
 int create_socket() {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
-        perror("create_socket error");
+        perror("ERROR : create_socket error");
         exit(1);
     }
     return sockfd;
@@ -32,7 +32,7 @@ int create_socket() {
 void set_reuse_addr(int sockfd) {
     int ret;
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &ret, sizeof(ret)) == -1) {
-        perror("set_reuse_addr error");
+        perror("ERROR : set_reuse_addr error");
         exit(1);
     }
 }
@@ -44,18 +44,18 @@ void bind_socket(int sockfd) {
     server_addr.sin_port = htons(SERVER_PORT);
 
     if(bind(sockfd, (sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
-        perror("bind_socket error");
+        perror("ERROR : bind_socket error");
         exit(1);
     }
 }
 
 void listen_socket(int sockfd) {
     if (listen(sockfd, BACKLOG) == -1) {
-        perror("listen_socket error");
+        perror("ERROR : listen_socket error");
         exit(1);
     }
 
-    // start success
+    // start server success
     print("Server started success, listen at %s:%d\n", SERVER_IP, SERVER_PORT);
 }
 
@@ -69,7 +69,7 @@ sockaddr_in get_client_addr(int sockfd) {
     sockaddr_in client;
     socklen_t addr_size = sizeof(struct sockaddr_in);
     if (getpeername(sockfd, (struct sockaddr*)&client, &addr_size) != 0) {
-        perror("get_client_addr error");
+        perror("ERROR : get_client_addr error");
         exit(1);
     }
     return client;
