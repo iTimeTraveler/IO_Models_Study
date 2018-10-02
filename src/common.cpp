@@ -7,6 +7,8 @@
 #include <cstdlib>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <cstring>
+#include <zconf.h>
 #include "common.h"
 
 
@@ -73,6 +75,25 @@ sockaddr_in get_client_addr(int sockfd) {
         exit(1);
     }
     return client;
+}
+
+void* client_handler(void* client_pointer) {
+    int client_sock = *((int *)client_pointer);
+
+    //Receive a message from client
+    int read_size;
+    char message[BUF_SIZE];
+    while((read_size = static_cast<int>(recv(client_sock, message, BUF_SIZE, 0))) > 0 ) {
+        log_recv(client_sock, message);
+
+        //Send the message back to client
+        send(client_sock, message, strlen(message)+1, 0);
+        log_send(client_sock, message);
+    }
+
+    log_dconn(client_sock);
+    close(client_sock);
+    return NULL;
 }
 
 

@@ -10,6 +10,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <zconf.h>
+#include <pthread.h>
 #include "block_server.h"
 #include "common.h"
 
@@ -18,6 +19,8 @@ using namespace std;
 extern const int BUF_SIZE;
 
 int block_serv(int argc, char *argv[]) {
+
+    int threadCount = 0;
 
     // create socket
     int listen_sockfd = create_socket();
@@ -41,18 +44,16 @@ int block_serv(int argc, char *argv[]) {
 
         log_conn(client_sock);
 
-        //Receive a message from client
-        int read_size;
-        char message[BUF_SIZE];
-        while((read_size = static_cast<int>(recv(client_sock, message, BUF_SIZE, 0))) > 0 ) {
-            log_recv(client_sock, message);
-
-            //Send the message back to client
-            send(client_sock, message, strlen(message)+1, 0);
-            log_send(client_sock, message);
+        // 单独申请一个新的地址
+        int cli_sock = client_sock;
+        pthread_t tid;
+        int ret = pthread_create(&tid, NULL, client_handler, &cli_sock);
+        if (ret != 0) {
+            perror("Error : create thread failed.");
+        } else {
+            printf("create new thread, count: %d\n", ++threadCount);
         }
-
-        log_dconn(client_sock);
-        close(client_sock);
     }
+
+    return 0;
 }
