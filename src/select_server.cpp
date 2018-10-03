@@ -13,8 +13,6 @@ extern const int BUF_SIZE;
 extern const unsigned int MAX_CLIENT_NUM;
 
 std::set<int> fd_sets;
-std::vector<int> need_add;
-std::vector<int> need_del;
 
 int select_serv(int argc, char *argv[]) {
 
@@ -52,8 +50,9 @@ int select_serv(int argc, char *argv[]) {
         print_fdsets(fd_sets, readfds);
 
         // check every fd in the set
-        it = fd_sets.begin();
-        for (; it != fd_sets.end() && ret != 0; it++) {
+        std::set<int> temp_sets(fd_sets);
+        it = temp_sets.begin();
+        for (; it != temp_sets.end() && ret != 0; it++) {
 
             if (!FD_ISSET(*it, &readfds)) {
                 continue;
@@ -73,7 +72,8 @@ int select_serv(int argc, char *argv[]) {
 
                 // add to fd set
                 if (fd_sets.size() - 1 < MAX_CLIENT_NUM) {
-                    need_add.push_back(client_sock);
+                    fd_sets.insert(client_sock);
+                    log_conn(client_sock);
                 } else {
                     too_many_clients(client_sock);
                 }
@@ -93,25 +93,13 @@ int select_serv(int argc, char *argv[]) {
                     log_send(cli, message);
                 } else {
                     // client close
-                    need_del.push_back(*it);
+                    fd_sets.erase(*it);
+                    log_dconn(*it);
+                    close(*it);
                 }
             }
         }
-
-        // need_add & need_del update to fd_sets
-        std::vector<int>::iterator iit;
-        for (iit = need_add.begin(); iit != need_add.end(); iit++) {
-            fd_sets.insert(*iit);
-            log_conn(*iit);
-        }
-        for (iit = need_del.begin(); iit != need_del.end(); iit++) {
-            fd_sets.erase(*iit);
-            log_dconn(*iit);
-            close(*iit);
-        }
         printf("now_client_num: %u\n", (unsigned int)fd_sets.size() - 1);
-        need_add.clear();
-        need_del.clear();
     }
 }
 
