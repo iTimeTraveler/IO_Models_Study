@@ -7,19 +7,22 @@
 #include "main.h"
 #include "block_server.h"
 #include "nonblock_server.h"
+#include "select_server.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
     char str[30];
 
-    cout << "五种I/O模型：" << endl;
+    cout << "为Server端选择一种I/O模型：" << endl;
     cout << "- 1. blocking I/O" << endl;
     cout << "- 2. non-blocking I/O" << endl;
-    cout << "- 3. I/O multiplexing (`select` and `poll`)" << endl;
-    cout << "- 4. signal driven I/O (`SIGIO`)" << endl;
-    cout << "- 5. asynchronous I/O (the POSIX `aio_` functions)" << endl;
-    cout << "请选择一个编号： ";
+    cout << "- 3. I/O multiplexing (`select`)" << endl;
+    cout << "- 4. I/O multiplexing (`poll`)" << endl;
+    cout << "- 5. I/O multiplexing (`epoll`)" << endl;
+    cout << "- 6. signal driven I/O (`SIGIO`)" << endl;
+    cout << "- 7. asynchronous I/O (the POSIX `aio_` functions)" << endl;
+    cout << "请输入一个编号： ";
     cin >> str;
 
     int i = std::stoi(str);
@@ -29,7 +32,7 @@ int main(int argc, char *argv[]) {
         case 2:
             return nonblock_serv(argc, argv);
         case 3:
-            break;
+            return select_serv(argc, argv);
         case 4:
             break;
         case 5:

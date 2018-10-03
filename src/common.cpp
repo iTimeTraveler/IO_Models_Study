@@ -12,14 +12,14 @@
 #include "common.h"
 
 
-extern const int BUF_SIZE = 1024;
-extern const char SERVER_IP[] = "0.0.0.0";
-extern const int SERVER_PORT = 8999;
-extern const int BACKLOG = 3;
+extern const int    BUF_SIZE      = 1024;
+extern const char   SERVER_IP[]   = "0.0.0.0";
+extern const int    SERVER_PORT   = 8999;
+extern const int    BACKLOG       = 3;
 
-extern const unsigned int MAX_CLIENT_NUM = 100*1024 + 10;
-extern const char ERR_MESSAGE[] = "[ERR]too many clients!!!";
-extern const int CLIENT_INTERVAL = 1;
+extern const unsigned int   MAX_CLIENT_NUM  = 100 * 1024 + 10;
+extern const char           ERR_MESSAGE[]   = "[ERR]too many clients!!!";
+extern const int            CLIENT_INTERVAL = 1;
 
 
 int create_socket() {
@@ -40,10 +40,10 @@ void set_reuse_addr(int sockfd) {
 }
 
 void bind_socket(int sockfd) {
-    sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
+    sockaddr_in server_addr{};
+    server_addr.sin_family      = AF_INET;
     server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
-    server_addr.sin_port = htons(SERVER_PORT);
+    server_addr.sin_port        = htons(SERVER_PORT);
 
     if(bind(sockfd, (sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
         perror("ERROR : bind_socket error");
@@ -94,6 +94,12 @@ void* client_handler(void* client_pointer) {
     log_dconn(client_sock);
     close(client_sock);
     return NULL;
+}
+
+void too_many_clients(int client_sock) {
+    print("%s, close socket : [%d]\n", ERR_MESSAGE, client_sock);
+    send(client_sock, ERR_MESSAGE, strlen(ERR_MESSAGE) + 1, 0);
+    close(client_sock);
 }
 
 

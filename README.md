@@ -42,7 +42,8 @@ int s = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
 ```
 （2）使用`fcntl`函数：
 ```c
-fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL, 0) | O_NONBLOCK);
+int flags = fcntl(sfd, F_GETFL, 0);
+fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 ```
 （3）使用`ioctl`函数：
 ```c

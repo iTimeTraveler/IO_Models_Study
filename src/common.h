@@ -12,9 +12,12 @@ void set_reuse_addr(int sockfd);
 void bind_socket(int sockfd);
 void listen_socket(int sockfd);
 int accept_socket(int sockfd);
+
 sockaddr_in get_client_addr(int sockfd);
 void* client_handler(void* client_pointer);
+void too_many_clients(int client_sock);
 
+// log functions
 void log_conn(int client_sock);
 void log_recv(int client_sock, char* message);
 void log_send(int client_sock, char* message);

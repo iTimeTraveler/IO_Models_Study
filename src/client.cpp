@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 
     //keep communicating with server
     int count = 0;
-    while (1) {
+    while (true) {
         char message[BUF_SIZE];
         sprintf(message, "%d", count++);
 

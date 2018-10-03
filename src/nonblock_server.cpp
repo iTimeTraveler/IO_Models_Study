@@ -42,23 +42,23 @@ int nonblock_serv(int argc, char *argv[]) {
     int threadCount = 0;
 
     // create socket
-    int listen_sockfd = create_socket();
+    int serv_sockfd = create_socket();
 
     // set reuse
-    set_reuse_addr(listen_sockfd);
+    set_reuse_addr(serv_sockfd);
 
     // set non-block
-    set_socket_non_block(listen_sockfd);
+    set_socket_non_block(serv_sockfd);
 
     // bind
-    bind_socket(listen_sockfd);
+    bind_socket(serv_sockfd);
 
     // listen
-    listen_socket(listen_sockfd);
+    listen_socket(serv_sockfd);
 
-    while (1) {
+    while (true) {
         //accept connection from an incoming client
-        int client_sock = accept_socket(listen_sockfd);
+        int client_sock = accept_socket(serv_sockfd);
         if (client_sock == -1) {
             if (errno == EWOULDBLOCK) {
                 usleep(2 * 1000);

@@ -20,4 +20,6 @@ add_executable(server
         src/block_server.cpp
         src/block_server.h
         src/nonblock_server.cpp
-        src/nonblock_server.h)
+        src/nonblock_server.h
+        src/select_server.cpp
+        src/select_server.h)
