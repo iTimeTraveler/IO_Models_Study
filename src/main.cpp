@@ -8,6 +8,7 @@
 #include "block_server.h"
 #include "nonblock_server.h"
 #include "select_server.h"
+#include "poll_server.h"
 
 using namespace std;
 
@@ -34,7 +35,7 @@ int main(int argc, char *argv[]) {
         case 3:
             return select_serv(argc, argv);
         case 4:
-            break;
+            return poll_serv(argc, argv);
         case 5:
             break;
         default:

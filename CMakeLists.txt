@@ -22,4 +22,6 @@ add_executable(server
         src/nonblock_server.cpp
         src/nonblock_server.h
         src/select_server.cpp
-        src/select_server.h)
+        src/select_server.h
+        src/poll_server.cpp
+        src/poll_server.h)
