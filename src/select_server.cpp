@@ -77,22 +77,24 @@ int select_serv(int argc, char *argv[]) {
                 } else {
                     too_many_clients(client_sock);
                 }
-            } else {    // client echo message
+            } else {
+
+                // client echo message
                 printf("client echo message\n");
                 char message[BUF_SIZE];
                 int cli = *it;
                 int read_size;
 
-                while((read_size = recv(cli, message, BUF_SIZE, 0)) > 0 ) {
+                if ((read_size = recv(cli, message, BUF_SIZE, 0)) > 0 ) {
                     log_recv(cli, message);
 
                     //Send the message back to client
                     send(cli, message, strlen(message)+1, 0);
                     log_send(cli, message);
+                } else {
+                    // client close
+                    need_del.push_back(*it);
                 }
-
-                // client close
-                need_del.push_back(*it);
             }
         }
 
