@@ -28,4 +28,6 @@ add_executable(server
         src/epoll_server.cpp
         src/epoll_server.h
         src/kqueue.cpp
-        src/kqueue.h)
+        src/kqueue.h
+        src/multithread_server.cpp
+        src/multithread_server.h)

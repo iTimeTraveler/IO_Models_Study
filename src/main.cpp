@@ -11,6 +11,7 @@
 #include "poll_server.h"
 #include "epoll_server.h"
 #include "kqueue.h"
+#include "multithread_server.h"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ int main(int argc, char *argv[]) {
     cout << "- 4. I/O multiplexing (`poll`)" << endl;
     cout << "- 5. I/O multiplexing (`epoll`)" << endl;
     cout << "- 6. I/O multiplexing (`kqueue`)" << endl;
-    cout << "- 7. signal driven I/O (`SIGIO`)" << endl;
+    cout << "- 7. multithread I/O" << endl;
     cout << "- 8. asynchronous I/O (the POSIX `aio_` functions)" << endl;
     cout << "请输入一个编号： ";
     cin >> str;
@@ -43,6 +44,8 @@ int main(int argc, char *argv[]) {
             return epoll_serv(argc, argv);
         case 6:
             return kqueue_serv(argc, argv);
+        case 7:
+            return multithread_serv(argc, argv);
         default:
             break;
     }
