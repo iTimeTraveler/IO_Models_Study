@@ -10,6 +10,7 @@
 #include <cstring>
 #include <zconf.h>
 #include <pthread.h>
+#include <unistd.h>
 #include "nonblock_server.h"
 #include "common.h"
 

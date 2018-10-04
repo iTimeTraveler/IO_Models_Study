@@ -24,4 +24,8 @@ add_executable(server
         src/select_server.cpp
         src/select_server.h
         src/poll_server.cpp
-        src/poll_server.h)
+        src/poll_server.h
+        src/epoll_server.cpp
+        src/epoll_server.h
+        src/kqueue.cpp
+        src/kqueue.h)

@@ -9,6 +9,8 @@
 #include "nonblock_server.h"
 #include "select_server.h"
 #include "poll_server.h"
+#include "epoll_server.h"
+#include "kqueue.h"
 
 using namespace std;
 
@@ -21,8 +23,9 @@ int main(int argc, char *argv[]) {
     cout << "- 3. I/O multiplexing (`select`)" << endl;
     cout << "- 4. I/O multiplexing (`poll`)" << endl;
     cout << "- 5. I/O multiplexing (`epoll`)" << endl;
-    cout << "- 6. signal driven I/O (`SIGIO`)" << endl;
-    cout << "- 7. asynchronous I/O (the POSIX `aio_` functions)" << endl;
+    cout << "- 6. I/O multiplexing (`kqueue`)" << endl;
+    cout << "- 7. signal driven I/O (`SIGIO`)" << endl;
+    cout << "- 8. asynchronous I/O (the POSIX `aio_` functions)" << endl;
     cout << "请输入一个编号： ";
     cin >> str;
 
@@ -37,7 +40,9 @@ int main(int argc, char *argv[]) {
         case 4:
             return poll_serv(argc, argv);
         case 5:
-            break;
+            return epoll_serv(argc, argv);
+        case 6:
+            return kqueue_serv(argc, argv);
         default:
             break;
     }

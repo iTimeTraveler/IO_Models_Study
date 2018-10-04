@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <zconf.h>
+#include <unistd.h>
 #include "common.h"
 
 

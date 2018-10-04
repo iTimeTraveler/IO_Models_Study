@@ -7,6 +7,7 @@
 #include <vector>
 #include <zconf.h>
 #include <poll.h>
+#include <unistd.h>
 #include "poll_server.h"
 #include "common.h"
 
@@ -118,7 +119,7 @@ int poll_serv(int argc, char *argv[]) {
  *  *** OK.	***	***
  */
 void print_pollsets(std::vector<pollfd> poll_sets) {
-    printf("[poll_sets.size] = %lu\n", poll_sets.size());
+    printf("[poll_sets.size] = %u\n", poll_sets.size());
 
     std::vector<pollfd>::iterator it;
     for (it = poll_sets.begin(); it != poll_sets.end(); it++) {

@@ -6,6 +6,7 @@
 #include <sys/select.h>
 #include <vector>
 #include <zconf.h>
+#include <unistd.h>
 #include "select_server.h"
 #include "common.h"
 
@@ -104,7 +105,7 @@ int select_serv(int argc, char *argv[]) {
 }
 
 void print_fdsets(std::set<int> fd_sets, fd_set readfds) {
-    printf("[fd_sets.size] = %lu\n", fd_sets.size());
+    printf("[fd_sets.size] = %u\n", fd_sets.size());
 
     std::set<int>::iterator it;
     for (it = fd_sets.begin(); it != fd_sets.end(); it++) {
