@@ -6,6 +6,7 @@
 #define IO_MODELS_STUDY_NONBLOCK_SERVER_H
 
 
+void* client_handle_infinit(void* client_pointer);
 int nonblock_serv(int argc, char *argv[]);
 
 

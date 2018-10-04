@@ -11,6 +11,7 @@
 #include <zconf.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <sstream>
 #include "nonblock_server.h"
 #include "common.h"
 
@@ -62,7 +63,7 @@ int nonblock_serv(int argc, char *argv[]) {
         int client_sock = accept_socket(serv_sockfd);
         if (client_sock == -1) {
             if (errno == EWOULDBLOCK) {
-                usleep(2 * 1000);
+                usleep(200 * 1000);
                 printf("waiting for client connection.\n");
             }
             continue;
@@ -73,12 +74,42 @@ int nonblock_serv(int argc, char *argv[]) {
         // 单独申请一个新的地址
         int cli_sock = client_sock;
         pthread_t tid;
-        int ret = pthread_create(&tid, NULL, client_handler, &cli_sock);
+        int ret = pthread_create(&tid, NULL, client_handle_infinit, &cli_sock);
         if (ret != 0) {
             perror("Error : create thread failed.");
         } else {
             printf("new thread, count: %d\n", ++threadCount);
         }
     }
+}
 
+void* client_handle_infinit(void* client_pointer) {
+    int client_sock = *((int *)client_pointer);
+
+    //Receive a message from client
+    char message[BUF_SIZE];
+    while(true) {
+        int read_size = recv(client_sock, message, BUF_SIZE, 0);
+        if (read_size <= 0 ) {
+            if (errno == EAGAIN) {
+                usleep(200 * 1000);  // sleep 1
+
+                std::ostringstream stringStream;
+                stringStream << "Error : [" << client_sock << "] recv error.";
+                std::string copyOfStr = stringStream.str();
+                perror(copyOfStr.c_str());
+            }
+            continue;
+        }
+
+        log_recv(client_sock, message);
+
+        //Send the message back to client
+        send(client_sock, message, strlen(message)+1, 0);
+        log_send(client_sock, message);
+    }
+
+    log_dconn(client_sock);
+    close(client_sock);
+    return NULL;
 }
