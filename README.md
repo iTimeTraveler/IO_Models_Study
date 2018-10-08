@@ -1,5 +1,7 @@
 # I/O Models Study
 
+![Simplified matrix of basic Linux I/O models](README/io_modules.gif)
+
 Richard Stevens 《[UNIX® Network Programming Volume 1, Third Edition: The Sockets
 Networking](https://notes.shichao.io/unp/ch6/)》 Chapter 6.2 "I/O Models"
 
@@ -49,3 +51,18 @@ fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 ```c
 ioctl(sockfd, FIONBIO, 1);  //1:非阻塞 0:阻塞
 ```
+
+
+
+**POSIX AIO及libaio的区别**
+
+libaio是原生的 linux aio，行为更为低级；POSXI AIO是在用户空间模拟异步IO的功能,不需要内核的支持。
+
+aio_*系列的调用是glibc提供的，是glibc用线程+阻塞调用来模拟的，性能很差。
+
+## 参考资料
+
+- [TCP网络编程中connect()、listen()和accept()三者之间的关系](https://blog.csdn.net/tennysonsky/article/details/45621341)
+- [Difference between POSIX AIO and libaio on Linux?](https://stackoverflow.com/questions/8768083/difference-between-posix-aio-and-libaio-on-linux)
+- [Boost application performance using asynchronous I/O](https://www.ibm.com/developerworks/linux/library/l-async/) - IBM Developer
+- [Linux异步IO+实例（POSIX IO与 libaio）](https://blog.csdn.net/lyh__521/article/details/50300379)
