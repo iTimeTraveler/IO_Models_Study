@@ -5,6 +5,7 @@ include $(CLEAR_VARS)
 
 # libclient.so
 LOCAL_MODULE:= my_client
+LOCAL_MODULE_FILENAME:=libmy_client
 LOCAL_SRC_FILES:= \
     $(LOCAL_PATH)/../src/client.cpp \
     $(LOCAL_PATH)/../src/common.cpp \
@@ -17,7 +18,8 @@ LOCAL_CPPFLAGS := \
     -fvisibility=hidden \
     -fvisibility-inlines-hidden
 
-include $(BUILD_SHARED_LIBRARY)
+# include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_EXECUTABLE)
 
 
 # libserver.so
@@ -50,4 +52,5 @@ LOCAL_CPPFLAGS := \
     -fvisibility=hidden \
     -fvisibility-inlines-hidden
 
-include $(BUILD_SHARED_LIBRARY)
+# include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_EXECUTABLE)

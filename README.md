@@ -60,6 +60,26 @@ libaio是原生的 linux aio，行为更为低级；POSXI AIO是在用户空间�
 
 aio_*系列的调用是glibc提供的，是glibc用线程+阻塞调用来模拟的，性能很差。
 
+## 编译步骤
+
+1. 使用CMake编译
+
+```shell
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+```
+
+2. 使用Android NDK编译
+
+需要把ndk-build命令放入系统全局变量中
+
+```shell
+$ cd jni
+$ ndk-build
+```
+
 ## 参考资料
 
 - [TCP网络编程中connect()、listen()和accept()三者之间的关系](https://blog.csdn.net/tennysonsky/article/details/45621341)
