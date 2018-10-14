@@ -2,6 +2,8 @@ LOCAL_PATH := $(call my-dir)
 TOP_PATH := $(LOCAL_PATH)
 
 include $(CLEAR_VARS)
+LOCAL_CFLAGS += -pie -fPIE
+LOCAL_LDFLAGS += -pie -fPIE
 
 # libclient.so
 LOCAL_MODULE:= my_client

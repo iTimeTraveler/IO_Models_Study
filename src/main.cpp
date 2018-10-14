@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     cout << "- " << ++x << ". blocking I/O" << endl;
     cout << "- " << ++x << ". non-blocking I/O" << endl;
     cout << "- " << ++x << ". I/O multiplexing (`select`)" << endl;
-    cout << "- 4. I/O multiplexing (`poll`)" << endl;
+    cout << "- " << ++x << ". I/O multiplexing (`poll`)" << endl;
 #if ((defined __ANDROID__) || (defined __linux__))
     cout << "- " << ++x << ". I/O multiplexing (`epoll`)" << endl;
 #elif __APPLE__
