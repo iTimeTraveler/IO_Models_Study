@@ -10,6 +10,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <zconf.h>
+#include <unistd.h>
 #include "block_server.h"
 #include "common.h"
 

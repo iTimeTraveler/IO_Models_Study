@@ -2,7 +2,6 @@
 // Copyright (c) 2018 iTimeTraveler All rights reserved.
 //
 
-#include <sys/event.h>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -10,6 +9,10 @@
 #include <errno.h>
 #include "kqueue.h"
 #include "common.h"
+
+#ifdef __APPLE__
+#include <sys/event.h>
+#endif
 
 #define exit_if(r, ...) if(r) {printf(__VA_ARGS__); printf("error no: %d error msg %s\n", errno, strerror(errno)); exit(1);}
 
@@ -19,7 +22,7 @@ const int kReadEvent    = 1;
 const int kWriteEvent   = 2;
 
 int kqueue_serv(int argc, char *argv[]) {
-
+#ifdef __APPLE__
     // create socket
     int serv_sockfd = create_socket();
 
@@ -85,9 +88,14 @@ int kqueue_serv(int argc, char *argv[]) {
             }
         }
     }
+#else
+    perror("`kqueue` just support Mac/Apple platform");
+    return 0;
+#endif
 }
 
 void updateEvents(int kqfd, int fd, int events, bool is_del) {
+#ifdef __APPLE__
     struct kevent ev[2];
     int n = 0;
     if (events & kReadEvent) {
@@ -100,4 +108,5 @@ void updateEvents(int kqfd, int fd, int events, bool is_del) {
            is_del ? "mod" : "add", fd, events & kReadEvent, events & kWriteEvent);
     int r = kevent(kqfd, ev, n, NULL, 0, NULL);
     exit_if(r, "Error : kevent failed ");
+#endif
 }

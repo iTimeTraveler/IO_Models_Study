@@ -95,7 +95,7 @@ void* client_handle_infinit(void* client_pointer) {
                 usleep(200 * 1000);  // sleep 1
 
                 std::ostringstream stringStream;
-                stringStream << "Error : [" << client_sock << "] recv error.";
+                stringStream << "INFO : [" << client_sock << "] recv EAGAIN.";
                 std::string copyOfStr = stringStream.str();
                 perror(copyOfStr.c_str());
             }

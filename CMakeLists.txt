@@ -4,6 +4,34 @@ project(IO_Models_Study)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
+MESSAGE(STATUS "###################################")
+
+MESSAGE(STATUS "operation system is ${CMAKE_SYSTEM}")
+
+IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    MESSAGE(STATUS "current platform: Linux ")
+ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    MESSAGE(STATUS "current platform: Windows")
+ELSEIF (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+    MESSAGE(STATUS "current platform: FreeBSD")
+ELSE ()
+    MESSAGE(STATUS "other platform: ${CMAKE_SYSTEM_NAME}")
+ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+
+
+
+IF (WIN32)
+    MESSAGE(STATUS "Now is windows")
+ELSEIF (APPLE)
+    MESSAGE(STATUS "Now is Apple system.")
+ELSEIF (LINUX)
+    MESSAGE(STATUS "Now is Linux system.")
+ELSEIF (UNIX)
+    MESSAGE(STATUS "Now is UNIX-like OS's. Including APPLE os x and CygWin")
+ENDIF()
+
+MESSAGE(STATUS "###################################")
+
 # DEBUG模式
 ADD_DEFINITIONS(-DDEBUG)
 
@@ -30,4 +58,6 @@ add_executable(server
         src/kqueue.cpp
         src/kqueue.h
         src/multithread_server.cpp
-        src/multithread_server.h)
+        src/multithread_server.h
+        src/aio_server.cpp
+        src/aio_server.h)

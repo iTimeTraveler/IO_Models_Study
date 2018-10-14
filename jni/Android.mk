@@ -26,7 +26,6 @@ include $(BUILD_EXECUTABLE)
 LOCAL_MODULE:= my_server
 LOCAL_MODULE_FILENAME:=libmy_server
 LOCAL_SRC_FILES:= \
-    # $(LOCAL_PATH)/../src/hello.cpp \
     $(LOCAL_PATH)/../src/main.cpp \
     $(LOCAL_PATH)/../src/main.h \
     $(LOCAL_PATH)/../src/common.cpp \
@@ -41,6 +40,10 @@ LOCAL_SRC_FILES:= \
     $(LOCAL_PATH)/../src/poll_server.h \
     $(LOCAL_PATH)/../src/epoll_server.cpp \
     $(LOCAL_PATH)/../src/epoll_server.h \
+    $(LOCAL_PATH)/../src/kqueue.cpp \
+    $(LOCAL_PATH)/../src/kqueue.h \
+    $(LOCAL_PATH)/../src/multithread_server.cpp \
+    $(LOCAL_PATH)/../src/multithread_server.h \
     $(LOCAL_PATH)/../src/aio_server.cpp \
     $(LOCAL_PATH)/../src/aio_server.h
 

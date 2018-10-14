@@ -4,13 +4,17 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <sys/epoll.h>
 #include "epoll_server.h"
 #include "common.h"
+
+#if ((defined __ANDROID__) || (defined __linux__))
+#include <sys/epoll.h>
+#endif
 
 extern const unsigned int MAX_CLIENT_NUM;
 
 int epoll_serv(int argc, char *argv[]) {
+#if ((defined __ANDROID__) || (defined __linux__))
 
     // create socket
     int serv_sockfd = create_socket();
@@ -39,6 +43,8 @@ int epoll_serv(int argc, char *argv[]) {
         perror("Error : epoll_ctl add serv_sockfd error");
         exit(1);
     }
-
+#else
+    perror("`epoll` just support Linux platform");
+#endif
     return 0;
 }

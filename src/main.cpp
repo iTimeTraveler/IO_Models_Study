@@ -4,49 +4,78 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <map>
 #include "main.h"
 #include "block_server.h"
 #include "nonblock_server.h"
 #include "select_server.h"
 #include "poll_server.h"
-#include "epoll_server.h"
-#include "kqueue.h"
 #include "multithread_server.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    char str[30];
+    show_current_system();
 
+    char str[30];
+    map<int, char> mapping;
+
+    for (char i = 0; i < 8; i++) {
+        mapping[i + 1] = ('A' + i);
+    }
+
+    int x = 0;
     cout << "为Server端选择一种I/O模型：" << endl;
-    cout << "- 1. blocking I/O" << endl;
-    cout << "- 2. non-blocking I/O" << endl;
-    cout << "- 3. I/O multiplexing (`select`)" << endl;
+    cout << "- " << ++x << ". blocking I/O" << endl;
+    cout << "- " << ++x << ". non-blocking I/O" << endl;
+    cout << "- " << ++x << ". I/O multiplexing (`select`)" << endl;
     cout << "- 4. I/O multiplexing (`poll`)" << endl;
-    cout << "- 5. I/O multiplexing (`epoll`)" << endl;
-    cout << "- 6. I/O multiplexing (`kqueue`)" << endl;
-    cout << "- 7. multithread I/O" << endl;
-    cout << "- 8. asynchronous I/O (the POSIX `aio_` functions)" << endl;
+#if ((defined __ANDROID__) || (defined __linux__))
+    cout << "- " << ++x << ". I/O multiplexing (`epoll`)" << endl;
+#elif __APPLE__
+    cout << "- " << ++x << ". I/O multiplexing (`kqueue`)" << endl;
+#endif
+    cout << "- " << ++x << ". multithread I/O" << endl;
+#ifdef __linux__
+    cout << "- " << ++x << ". asynchronous I/O (the POSIX `aio_` functions)" << endl;
+#endif
     cout << "请输入一个编号： ";
     cin >> str;
 
-    int i = std::stoi(str);
-    switch (i) {
-        case 1:
+    int in = std::stoi(str);
+    char c = mapping[in];
+    printf("str_index: %d_%c\n", in, c);
+
+    switch (c) {
+        case 'A':
+            cout << "You choose blocking server." << endl;
             return block_serv(argc, argv);
-        case 2:
+        case 'B':
+            cout << "You choose non-blocking server." << endl;
             return nonblock_serv(argc, argv);
-        case 3:
+        case 'C':
+            cout << "You choose `select` server." << endl;
             return select_serv(argc, argv);
-        case 4:
+        case 'D':
+            cout << "You choose `poll` server." << endl;
             return poll_serv(argc, argv);
-        case 5:
+#if ((defined __ANDROID__) || (defined __linux__))
+        case 'E':
+            cout << "You choose `epoll` server." << endl;
             return epoll_serv(argc, argv);
-        case 6:
+#elif __APPLE__
+        case 'F':
+            cout << "You choose `kqueue` server." << endl;
             return kqueue_serv(argc, argv);
-        case 7:
+#endif
+        case 'G':
+            cout << "You choose multithread server." << endl;
             return multithread_serv(argc, argv);
+        case 'H':
+            printf("Sorry, asynchronous I/O, command [%s] Not support.\n", str);
+            return 0;
         default:
-            break;
+            printf("Sorry, command [%s] Not support.\n", str);
+            return 0;
     }
 }

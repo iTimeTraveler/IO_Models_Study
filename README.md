@@ -86,3 +86,4 @@ $ ndk-build
 - [Difference between POSIX AIO and libaio on Linux?](https://stackoverflow.com/questions/8768083/difference-between-posix-aio-and-libaio-on-linux)
 - [Boost application performance using asynchronous I/O](https://www.ibm.com/developerworks/linux/library/l-async/) - IBM Developer
 - [Linux异步IO+实例（POSIX IO与 libaio）](https://blog.csdn.net/lyh__521/article/details/50300379)
+- [【NDK】编译生成直接运行在Android系统的可执行文件](http://sodino.com/2015/01/12/build-executables-for-android-using-NDK/)
