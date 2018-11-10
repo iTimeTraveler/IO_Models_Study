@@ -11,10 +11,12 @@
 
 extern const int BUF_SIZE;
 extern const unsigned int MAX_CLIENT_NUM;
-unsigned int threadCount = 0;
+extern unsigned int threadCount;
 pthread_mutex_t threadCount_lock;
 
 int multithread_serv(int argc, char *argv[]) {
+
+    threadCount = 0;
 
     // create socket
     int serv_sockfd = create_socket();

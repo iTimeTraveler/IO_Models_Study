@@ -21,7 +21,7 @@ extern const int    BACKLOG       = 3;
 extern const unsigned int   MAX_CLIENT_NUM  = 100 * 1024 + 10;
 extern const char           ERR_MESSAGE[]   = "[ERR]too many clients!!!";
 extern const int            CLIENT_INTERVAL = 1;
-
+unsigned int                threadCount     = 0;
 
 int create_socket() {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);

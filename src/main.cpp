@@ -14,30 +14,27 @@
 
 using namespace std;
 
+map<int, char> mapping;
+int x = 0;
+
 int main(int argc, char *argv[]) {
     show_current_system();
 
     char str[30];
-    map<int, char> mapping;
 
-    for (char i = 0; i < 8; i++) {
-        mapping[i + 1] = ('A' + i);
-    }
-
-    int x = 0;
     cout << "为Server端选择一种I/O模型：" << endl;
-    cout << "- " << ++x << ". blocking I/O" << endl;
-    cout << "- " << ++x << ". non-blocking I/O" << endl;
-    cout << "- " << ++x << ". I/O multiplexing (`select`)" << endl;
-    cout << "- " << ++x << ". I/O multiplexing (`poll`)" << endl;
+    cout << "- " << mapPut('A') << ". blocking I/O" << endl;
+    cout << "- " << mapPut('B') << ". non-blocking I/O" << endl;
+    cout << "- " << mapPut('C') << ". I/O multiplexing (`select`)" << endl;
+    cout << "- " << mapPut('D') << ". I/O multiplexing (`poll`)" << endl;
 #if ((defined __ANDROID__) || (defined __linux__))
-    cout << "- " << ++x << ". I/O multiplexing (`epoll`)" << endl;
+    cout << "- " << mapPut('E') << ". I/O multiplexing (`epoll`)" << endl;
 #elif __APPLE__
-    cout << "- " << ++x << ". I/O multiplexing (`kqueue`)" << endl;
+    cout << "- " << mapPut('F') << ". I/O multiplexing (`kqueue`)" << endl;
 #endif
-    cout << "- " << ++x << ". multithread I/O" << endl;
+    cout << "- " << mapPut('G') << ". multithread I/O" << endl;
 #ifdef __linux__
-    cout << "- " << ++x << ". asynchronous I/O (the POSIX `aio_` functions)" << endl;
+    cout << "- " << mapPut('H') << ". asynchronous I/O (the POSIX `aio_` functions)" << endl;
 #endif
     cout << "请输入一个编号： ";
     cin >> str;
@@ -78,4 +75,9 @@ int main(int argc, char *argv[]) {
             printf("Sorry, command [%s] Not support.\n", str);
             return 0;
     }
+}
+
+int mapPut(char target) {
+    mapping[++x] = target;
+    return x;
 }

@@ -16,6 +16,7 @@
 #include "common.h"
 
 extern const int BUF_SIZE;
+extern unsigned int threadCount;
 
 /**
  * 设置socket为non-blocking
@@ -41,7 +42,7 @@ static int set_socket_non_block(int sfd) {
 
 int nonblock_serv(int argc, char *argv[]) {
 
-    int threadCount = 0;
+    threadCount = 0;
 
     // create socket
     int serv_sockfd = create_socket();
@@ -64,7 +65,7 @@ int nonblock_serv(int argc, char *argv[]) {
         if (client_sock == -1) {
             if (errno == EWOULDBLOCK) {
                 usleep(200 * 1000);
-                printf("waiting for client connection.\n");
+                printf("waiting for client connection. [ThreadCount:%d]\n", threadCount);
             }
             continue;
         }
@@ -111,5 +112,6 @@ void* client_handle_infinit(void* client_pointer) {
 
     log_dconn(client_sock);
     close(client_sock);
+    threadCount--;
     return NULL;
 }

@@ -6,6 +6,9 @@
 #define IO_MODELS_STUDY_MAIN_H
 
 
+int mapPut(char target);
+
+
 #ifdef _WIN32
 //define something for Windows (32-bit and 64-bit, this part is common)
     #ifdef _WIN64
