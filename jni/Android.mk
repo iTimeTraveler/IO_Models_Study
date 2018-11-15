@@ -14,6 +14,7 @@ LOCAL_SRC_FILES:= \
     $(LOCAL_PATH)/../src/common.h
 
 LOCAL_CFLAGS := -DHAVE_CONFIG_H -fvisibility=hidden
+LOCAL_CFLAGS += -DDEBUG
 
 LOCAL_CPPFLAGS := \
     -std=c++11 \
@@ -51,6 +52,7 @@ LOCAL_SRC_FILES:= \
 
 
 LOCAL_CFLAGS := -DHAVE_CONFIG_H -fvisibility=hidden
+LOCAL_CFLAGS += -DDEBUG
 
 LOCAL_CPPFLAGS := \
     -std=c++11 \
