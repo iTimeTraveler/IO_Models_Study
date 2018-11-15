@@ -4,6 +4,9 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
+#include <unistd.h>
+#include <errno.h>
 #include "epoll_server.h"
 #include "common.h"
 
@@ -11,7 +14,9 @@
 #include <sys/epoll.h>
 #endif
 
+extern const int BUF_SIZE;
 extern const unsigned int MAX_CLIENT_NUM;
+int MAX_EVENTS = 100;
 
 int epoll_serv(int argc, char *argv[]) {
 #if ((defined __ANDROID__) || (defined __linux__))
@@ -36,12 +41,76 @@ int epoll_serv(int argc, char *argv[]) {
     }
 
     // add serv_sockfd to epoll
-    epoll_event ev;
-    ev.events = EPOLLIN;
+    struct epoll_event ev, events[MAX_EVENTS];
     ev.data.fd = serv_sockfd;
+    ev.events = EPOLLIN | EPOLLERR | EPOLLHUP;      //设置要处理的事件类型
     if (epoll_ctl(epollfd, EPOLL_CTL_ADD, serv_sockfd, &ev) == -1) {
         perror("Error : epoll_ctl add serv_sockfd error");
         exit(1);
+    }
+
+    while (true) {
+        int nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);    //等待epoll事件的发生
+        if (nfds == -1) {
+            printf("epoll_wait failed %d [%d]\n", errno, nfds);
+            break;
+        }
+
+        for (int i = 0; i < nfds; i++) {
+            int evtfd = events[i].data.fd;
+
+            if (evtfd < 0)
+                continue;
+
+            // new client
+            if (evtfd == serv_sockfd) {   //监测到一个SOCKET用户连接到了绑定的SOCKET端口，建立新的连接。
+
+                // accept connection from an incoming client
+                int client_sock = accept_socket(serv_sockfd);
+                if (client_sock == -1) {
+                    perror("ERROR : accept failed");
+                    continue;
+                }
+
+                // setnonblocking(serv_sockfd);
+                ev.data.fd = serv_sockfd;
+                ev.events = EPOLLIN | EPOLLERR | EPOLLHUP;  //设置要处理的事件类型
+                epoll_ctl(epollfd, EPOLL_CTL_ADD, client_sock, &ev);
+                continue;
+            }
+
+            if (events[i].events & EPOLLIN) {   //socket收到数据
+
+                // client echo message
+                printf("client echo message\n");
+                char message[BUF_SIZE];
+                int cli = evtfd;
+                int read_size;
+
+                if ((read_size = recv(cli, message, BUF_SIZE, 0)) > 0 ) {
+                    log_recv(cli, message);
+
+                    //Send the message back to client
+                    send(cli, message, strlen(message)+1, 0);
+                    log_send(cli, message);
+                } else {
+                    // client close & delete
+                    // updateEvents(kqfd, cli, kReadEvent | kWriteEvent, true);
+                    log_dconn(cli);
+                    close(cli);
+                }
+            }
+
+            if (events[i].events & EPOLLERR) {  //socket错误
+                close(evtfd);
+                events[i].data.fd = -1;
+            }
+
+            if (events[i].events & EPOLLHUP) {  //socket错误
+                close(evtfd);
+                events[i].data.fd = -1;
+            }
+        }
     }
 #else
     perror("`epoll` just support Linux platform");
