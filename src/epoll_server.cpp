@@ -7,6 +7,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <errno.h>
+#include <fcntl.h>
 #include "epoll_server.h"
 #include "common.h"
 
@@ -18,6 +19,28 @@ extern const int BUF_SIZE;
 extern const unsigned int MAX_CLIENT_NUM;
 int MAX_EVENTS = 100;
 
+/**
+ * 设置socket为non-blocking
+ */
+static int set_socket_non_block(int sfd) {
+    int flags, res;
+
+    flags = fcntl(sfd, F_GETFL, 0);
+    if (flags == -1) {
+        perror("Error : cannot get socket flags!\n");
+        exit(1);
+    }
+
+    flags |= O_NONBLOCK;
+    res = fcntl(sfd, F_SETFL, flags);
+    if (res == -1) {
+        perror("Error : cannot set socket flags!\n");
+        exit(1);
+    }
+
+    return 0;
+}
+
 int epoll_serv(int argc, char *argv[]) {
 #if ((defined __ANDROID__) || (defined __linux__))
 
@@ -27,6 +50,9 @@ int epoll_serv(int argc, char *argv[]) {
     // set reuse
     set_reuse_addr(serv_sockfd);
 
+    // set non-block
+    // set_socket_non_block(serv_sockfd);
+
     // bind
     bind_socket(serv_sockfd);
 
@@ -34,7 +60,7 @@ int epoll_serv(int argc, char *argv[]) {
     listen_socket(serv_sockfd);
 
     // create epoll
-    int epollfd = epoll_create(MAX_CLIENT_NUM);
+    int epollfd = epoll_create(MAX_EVENTS);
     if (epollfd == -1) {
         perror("Error : epoll_create error");
         exit(1);
@@ -62,6 +88,16 @@ int epoll_serv(int argc, char *argv[]) {
             if (evtfd < 0)
                 continue;
 
+            if ((events[i].events & EPOLLERR) ||
+            (events[i].events & EPOLLHUP) ||
+            (!(events[i].events & EPOLLIN))) {
+                /* An error has occured on this fd, or the socket is not
+                 * ready for reading (why were we notified then?) */
+                fprintf (stderr, "epoll events error\n");
+                close (evtfd);
+                continue;
+            }
+
             // new client
             if (evtfd == serv_sockfd) {   //监测到一个SOCKET用户连接到了绑定的SOCKET端口，建立新的连接。
 
@@ -72,9 +108,8 @@ int epoll_serv(int argc, char *argv[]) {
                     continue;
                 }
 
-                // setnonblocking(serv_sockfd);
-                ev.data.fd = serv_sockfd;
-                ev.events = EPOLLIN | EPOLLERR | EPOLLHUP;  //设置要处理的事件类型
+                ev.data.fd = client_sock;
+                ev.events = EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP;  //设置要处理的事件类型
                 epoll_ctl(epollfd, EPOLL_CTL_ADD, client_sock, &ev);
                 continue;
             }
