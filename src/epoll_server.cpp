@@ -88,9 +88,8 @@ int epoll_serv(int argc, char *argv[]) {
             if (evtfd < 0)
                 continue;
 
-            if ((events[i].events & EPOLLERR) ||
-            (events[i].events & EPOLLHUP) ||
-            (!(events[i].events & EPOLLIN))) {
+            // socket错误
+            if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP)) {
                 /* An error has occured on this fd, or the socket is not
                  * ready for reading (why were we notified then?) */
                 fprintf (stderr, "epoll events error\n");
@@ -118,32 +117,22 @@ int epoll_serv(int argc, char *argv[]) {
 
                 // client echo message
                 printf("client echo message\n");
-                char message[BUF_SIZE];
+                char buf[BUF_SIZE];
                 int cli = evtfd;
                 int read_size;
 
-                if ((read_size = recv(cli, message, BUF_SIZE, 0)) > 0 ) {
-                    log_recv(cli, message);
+                if ((read_size = recv(cli, buf, BUF_SIZE, 0)) > 0 ) {
+                    log_recv(cli, buf);
 
                     //Send the message back to client
-                    send(cli, message, strlen(message)+1, 0);
-                    log_send(cli, message);
+                    send(cli, buf, strlen(buf)+1, 0);
+                    log_send(cli, buf);
                 } else {
                     // client close & delete
                     // updateEvents(kqfd, cli, kReadEvent | kWriteEvent, true);
                     log_dconn(cli);
                     close(cli);
                 }
-            }
-
-            if (events[i].events & EPOLLERR) {  //socket错误
-                close(evtfd);
-                events[i].data.fd = -1;
-            }
-
-            if (events[i].events & EPOLLHUP) {  //socket错误
-                close(evtfd);
-                events[i].data.fd = -1;
             }
         }
     }
